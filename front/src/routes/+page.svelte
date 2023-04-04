@@ -1,15 +1,22 @@
-<h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-  <button class="btn">Button</button>
-<button class="btn btn-primary">Button</button>
-<button class="btn btn-secondary">Button</button>
-<button class="btn btn-accent">Button</button>
-<button class="btn btn-ghost">Button</button>
-<button class="btn btn-link">Button</button>
-  
-  <style lang="postcss">
-    :global(html) {
-      background-color: theme(colors.gray.100);
-    }
-  </style>
+<script lang="ts">
+  import Inventory from "$lib/components/Inventory.svelte";
+import Nav from "$lib/components/Nav.svelte";
+import { currentUser } from "$lib/store";
+import Login from "../lib/components/Login.svelte";
+
+
+</script>
+<section class="h-screen">
+  {#if $currentUser}
+    <Nav />
+    <Inventory />
+  {:else}
+  <div class="flex justify-center h-screen items-center">
+    <div class="absolute left-0 bottom-0 m-16 ">STATS</div>
+    <div class="absolute right-0 top-0 m-16 ">STATS</div>
+    <div class="absolute right-0 bottom-0 m-16 ">STATS</div>
+    <Login />
+  </div>
+  {/if}
+
+</section>
