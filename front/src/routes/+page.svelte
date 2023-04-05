@@ -6,7 +6,7 @@ import Login from "../lib/components/Login.svelte";
 
 
 </script>
-<section class="h-screen">
+<section class="h-full">
   {#if $currentUser}
     <Inventory />
   {/if}

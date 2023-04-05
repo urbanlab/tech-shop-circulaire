@@ -12,12 +12,12 @@
         watchEquipmentsChange()
     });
   </script>
-<body class="bg-slate-300 flex">
+<body class="bg-slate-300 flex w-screen h-screen ">
   {#if $currentUser}
-  <div class="w-5/12 h-full">
+  <div class="w-3/12 pt-10 mr-4">
     <Nav/>
   </div>
-  <div>
+  <div class="pt-10 w-9/12">
     <slot />
   </div>
   {:else}

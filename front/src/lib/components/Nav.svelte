@@ -31,7 +31,7 @@
 
 </script>
 
-<section class="flex flex-col justify-between h-full p-8">
+<section class="flex flex-col justify-between h-full">
   <div>
     <Title title="Mon matériel mutualisé" />
     <div class="dropdown dropdown-bottom dropdown-end">
