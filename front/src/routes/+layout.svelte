@@ -7,7 +7,6 @@
   import Login from "$lib/components/Login.svelte";
 
     onMount(() => {
-        console.log("mounted");
         watchUserChange()
         watchEquipmentsChange()
     });

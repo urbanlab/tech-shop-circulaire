@@ -13,10 +13,6 @@
 
   const mediaUrl = PUBLIC_POCKETBASE_URL + "/api/files/";
 
-  $: console.log($currentEquipments)
-
-
-
 </script>
 <section class="bg-white w-full h-full rounded-t-2xl p-8">
     <div class="alert alert-info mb-4">
@@ -37,10 +33,10 @@
       </div>
 
       <div class="container flex">
-        <div class="flex flex-row w-2/6">
+        <div class="flex flex-row flex-wrap">
           {#each $currentEquipments as currentEquipment}
           <a href="/equipments/{currentEquipment.id}">
-            <div class="cursor-pointer hover:opacity-80 rounded-2xl border overflow-hidden border-slate-200  bg-cover bg-center bg-no-repeat" style="background-image: url({mediaUrl + currentEquipment.collectionId + "/" + currentEquipment.id + "/" +  currentEquipment.image});">
+            <div class="cursor-pointer w-64 h-80 mr-4 mb-4 hover:opacity-80 rounded-2xl border overflow-hidden border-slate-200  bg-cover bg-center bg-no-repeat" style="background-image: url({mediaUrl + currentEquipment.collectionId + "/" + currentEquipment.id + "/" +  currentEquipment.image});">
               <div class="h-52 flex justify-end items-end">
                 <span class="m-4 bg-white pl-3 pr-4 rounded-3xl">Type</span>
               </div>
@@ -55,13 +51,13 @@
             </div>
           </a>
           {/each}
-        </div>
-          <div class="flex border border-dashed hover:bg-slate-200  hover:border-white cursor-pointer w-2/6 rounded-2xl justify-center items-center">
+          <div class="flex border border-dashed hover:bg-slate-200  hover:border-white cursor-pointer  w-64 h-80 rounded-2xl justify-center items-center">
             <Plus/>
             <p>Ajouter un matériel</p>
           </div>
         </div>
+        </div>
       </div>
       
-    <button class="btn absolute right-0 bottom-0" on:click={() => create = true}><Plus/> Ajouter un matériel</button>
+    <button class="btn fixed right-4 bottom-4" on:click={() => create = true}><Plus/> Ajouter un matériel</button>
 </section>
