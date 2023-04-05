@@ -3,12 +3,12 @@
     import Nav from "$lib/components/Nav.svelte";
 
     import { onMount } from "svelte";
-  import { watchUserChange, watchEquipmentsChange, currentUser } from "../lib/store";
+  import { watchUserChange, watchEquipmentsChange, currentUser, watchEquipmentTypesChange } from "../lib/store";
   import Login from "$lib/components/Login.svelte";
-
     onMount(() => {
         watchUserChange()
         watchEquipmentsChange()
+        watchEquipmentTypesChange()
     });
   </script>
 <body class="bg-slate-300 flex w-screen h-screen ">
