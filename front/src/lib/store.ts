@@ -65,3 +65,35 @@ export async function watchEquipmentsChange() {
 
     });
 }
+
+export type EquipmentTypes = {
+    id: string;
+    name: string;
+    co2Weight: number;
+}
+
+export const currentEquipmentTypes = writable<EquipmentTypes[]>([]);
+
+export async function watchEquipmentTypesChange() {
+    const getEquipmentTypes = await pb.collection("equipmentTypes").getFullList<EquipmentTypes>();
+    currentEquipmentTypes.set(getEquipmentTypes);
+    // subscribe to the user data
+    pb.collection("equipmentTypes").subscribe('*', async ({action,  record}) => {
+        if (action === "update") {
+            currentEquipmentTypes.set(get(currentEquipmentTypes).map(equipmentType => {
+                if (equipmentType.id === record.id) {
+                    return record;
+                }
+                return equipmentType;
+            }
+            ));
+        }
+        if (action === "create") {
+            currentEquipmentTypes.set([...get(currentEquipmentTypes), record]);
+        }
+        if (action === "delete") {
+            currentEquipmentTypes.set(get(currentEquipmentTypes).filter(equipmentType => equipmentType.id !== record.id));
+        }
+
+    });
+}
