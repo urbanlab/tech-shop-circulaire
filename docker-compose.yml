@@ -13,13 +13,10 @@ services:
     build: front/
     volumes:
       - ./front/src/:/app/src
-      - node_modules:/app/node_modules
     ports:
       - "5173:5173"
     env_file:
       - .env
       
-    
-volumes:
-  node_modules:
+
   
