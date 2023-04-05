@@ -16,7 +16,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           push: true
           tags: erasme/techshop-circulaire-back:${{ github.ref == 'refs/heads/dev' && 'dev' || 'misc' }}, erasme/techshop-circulaire-back:${{ github.sha }}
