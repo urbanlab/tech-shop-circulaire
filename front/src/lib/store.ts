@@ -21,5 +21,47 @@ export async function watchUserChange() {
         if (action === "update") {
             currentUser.set(record);
         }
-    });   
+    });
+}
+
+export type Equipment = {
+    id: string;
+    name: string;
+    desc: string;
+    reference: string;
+    date: Date;
+    tips: string;
+    /**
+     * Image name
+     */
+    image: string;
+    purchaseCost: number;
+    type: any;
+    field: any[];
+}
+
+export const currentEquipments = writable<Equipment[]>([]);
+
+export async function watchEquipmentsChange() {
+    const getEquipments = await pb.collection("equipments").getFullList<Equipment>();
+    currentEquipments.set(getEquipments);
+    // subscribe to the user data
+    pb.collection("equipments").subscribe('*', async ({action,  record}) => {
+        if (action === "update") {
+            currentEquipments.set(get(currentEquipments).map(equipment => {
+                if (equipment.id === record.id) {
+                    return record;
+                }
+                return equipment;
+            }
+            ));
+        }
+        if (action === "create") {
+            currentEquipments.set([...get(currentEquipments), record]);
+        }
+        if (action === "delete") {
+            currentEquipments.set(get(currentEquipments).filter(equipment => equipment.id !== record.id));
+        }
+
+    });
 }
