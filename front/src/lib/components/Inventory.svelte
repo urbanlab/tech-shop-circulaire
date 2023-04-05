@@ -1,6 +1,8 @@
 <script lang= "ts" >
   import { currentEquipments, pb } from "$lib/store";
-import Title from "./misc/Title.svelte";
+  import Plus from "svelte-material-icons/Plus.svelte";
+  import Filter from "svelte-material-icons/Filter.svelte";
+
 
     let equipmentTypes= [
         {id: 1, name: "Ordinateur"},
@@ -35,27 +37,47 @@ import Title from "./misc/Title.svelte";
 
 </script>
 <section>
-    <Title text="Mon materiel mutualisé" />
     <div class="alert alert-info shadow-lg">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <span>Le matériel mutualisé n’est visible que par moi</span>
         </div>
       </div>
-    <button class="btn" on:click={() => create = true}>+ Enregistrer un matériel</button>
-
     <div>
-        Filtrer
-        {#each equipmentTypes as equipmentType}
-            <label class="checkbox">
-                <input type="checkbox" />
-                <span class="checkbox-mark"></span>
-                <span class="ml-2">{equipmentType.name}</span>
-            </label>
-        {/each}
+      <div class="flex flex-row">
+        <Filter />
+        <p>Filtrer par</p> 
+        <select>
+            {#each equipmentTypes as equipmentType}
+                <option value={equipmentType.id}>{equipmentType.name}</option>
+            {/each}
+        </select>
+      </div>
 
         {#each $currentEquipments as currentEquipment}
-            <button class="btn primary-color">{currentEquipment.name}</button>
+        <div class="card w-96 bg-base-100 shadow-xl">
+          <figure><img src="/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+          <div class="card-body">
+            <h2 class="card-title">
+              {currentEquipment.name}
+            </h2>
+            <p>{currentEquipment.desc}</p>
+            <div class="card-actions justify-end">
+              <div class="badge badge-outline">Fashion</div>
+              <div class="badge badge-outline">Products</div>
+            </div>
+            <div class="w-full bg-green-700">HELLLOOO</div>
+          </div>
+        </div>
+
+        <div class="rounded-md border border-black">
+          HELLO
+        </div>
         {/each}
+        <div class="border">
+          <Plus/>
+          <p>Ajouter un matériel</p>
+        </div>
     </div>
+    <button class="btn absolute right-0 bottom-0" on:click={() => create = true}><Plus/> Ajouter un matériel</button>
 </section>
