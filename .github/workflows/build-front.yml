@@ -32,7 +32,6 @@ jobs:
           tags: erasme/techshop-circulaire-front:${{ github.ref == 'refs/heads/dev' && 'dev' || 'misc' }}, erasme/techshop-circulaire-front:${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
-          context: ./front
           file: ./front/Dockerfile
 
       - name: Move cache
