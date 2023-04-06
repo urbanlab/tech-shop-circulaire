@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    
     import { currentEquipments, type Equipment } from "$lib/store";
     import { resolveUrlToImage } from "$lib/utils/pocket-base";
     import Title from "./misc/Title.svelte";

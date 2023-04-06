@@ -14,7 +14,7 @@
   const mediaUrl = PUBLIC_POCKETBASE_URL + "/api/files/";
 
 </script>
-<section class="bg-white w-full h-full rounded-t-2xl p-8">
+<section>
     <div class="alert alert-info mb-4">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -35,7 +35,7 @@
       <div class="container flex">
         <div class="flex flex-row flex-wrap">
           {#each $currentEquipments as currentEquipment}
-          <a href="/equipments/{currentEquipment.id}">
+          <a href="/equipment/{currentEquipment.id}">
             <div class="cursor-pointer w-64 h-80 mr-4 mb-4 hover:opacity-80 rounded-2xl border overflow-hidden border-slate-200  bg-cover bg-center bg-no-repeat" style="background-image: url({mediaUrl + currentEquipment.collectionId + "/" + currentEquipment.id + "/" +  currentEquipment.image});">
               <div class="h-52 flex justify-end items-end">
                 <span class="m-4 bg-white pl-3 pr-4 rounded-3xl">Type</span>
