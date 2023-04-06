@@ -1,12 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import {
-        currentEquipments,
-        currentRentHistories,
-        pb,
-        type Equipment,
-        type RentHistory
-    } from "$lib/store";
+    import { currentEquipments, type Equipment } from "$lib/store";
     import { resolveUrlToImage } from "$lib/utils/pocket-base";
     import Title from "./misc/Title.svelte";
     import Pencil from "svelte-material-icons/Pencil.svelte";
@@ -19,6 +13,31 @@
 
     $: equipment = $currentEquipments.find((equipment: Equipment) => equipment.id === id); // WARN : equipment can be undefined, handle this
     $: console.log({ equipment }); // FIXME : remove this after dev
+
+    $: rentHistoriesWithMonth = equipment?.expand?.rentHistories?.map((rentHistory) => {
+        const month: string = new Date(rentHistory.startDate).toLocaleString("default", {
+            month: "long"
+        });
+        const year: number = new Date(rentHistory.startDate).getFullYear();
+        const monthYear = `${month} ${year}`;
+        return { ...rentHistory, monthYear };
+    }).sort((a, b) => {
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+        return dateB.getTime() - dateA.getTime();
+    });
+    $: console.log({ rentHistoriesWithMonth }); // FIXME : remove this after dev
+
+    $: rentHistoriesMonths = rentHistoriesWithMonth?.reduce(
+        (acc: string[], rentHistory) => {
+            if (!acc.includes(rentHistory.monthYear)) {
+                acc.push(rentHistory.monthYear);
+            }
+            return acc;
+        },
+        []
+    );
+    $: console.log({ rentHistoriesMonths }); // FIXME : remove this after dev
 </script>
 
 <section>
@@ -59,16 +78,26 @@
         <hr />
 
         <Title title={"Historique de location"} />
-        {#if equipment?.expand?.rentHistories}
-            {#each equipment.expand.rentHistories as rentHistory}
-                <div class="border-2">
-                    <p><strong>Start date</strong>: {rentHistory.startDate}</p>
-                    <p><strong>End date</strong>: {rentHistory.stopDate}</p>
-                    <p><strong>Borrower email</strong>: {rentHistory.borrowerMail}</p>
-                    <p>
-                        <strong>Borrower structure</strong>: {rentHistory.borrowerStructure}
-                    </p>
-                </div>
+
+        {#if equipment?.expand?.rentHistories && rentHistoriesWithMonth && rentHistoriesMonths}
+            <!-- Group by month -->
+            {#each rentHistoriesMonths as rentHistoriesMonth}
+                <h2>{rentHistoriesMonth}</h2>
+                {#each rentHistoriesWithMonth as rentHistory}
+                    {#if rentHistory.monthYear === rentHistoriesMonth}
+                        <div class="border-2">
+                            <p><strong>Start date</strong>: {rentHistory.startDate}</p>
+                            <p><strong>End date</strong>: {rentHistory.stopDate}</p>
+                            <p>
+                                <strong>Borrower email</strong>: {rentHistory.borrowerMail}
+                            </p>
+                            <p>
+                                <strong>Borrower structure</strong>:
+                                {rentHistory.borrowerStructure}
+                            </p>
+                        </div>
+                    {/if}
+                {/each}
             {/each}
         {:else}
             <p>Aucun historique de location</p>
