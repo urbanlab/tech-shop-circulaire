@@ -4,13 +4,16 @@
   import Title from "../../../lib/components/misc/Title.svelte";
   import { PUBLIC_FRONT_DOMAIN_URL } from "$env/static/public";
 
-  let equipment = {
-    id: 1,
-    name: "Ordinateur",
-    desc: "Un ordinateur portable",
-    image: "image.jpg",
-    collectionId: 1,
-  };
+  import { page } from '$app/stores';
+  import { currentEquipments, type Equipment } from '$lib/store';
+
+  const id = $page.params.id;
+  console.log(id);
+
+  $: editMode = false;
+
+  $: equipment = $currentEquipments.find((equipment: Equipment) => equipment.id === id); // WARN : equipment can be undefined, handle this
+
 
   let stats = [
     {
