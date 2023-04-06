@@ -59,5 +59,5 @@
         </div>
       </div>
       
-    <button class="btn fixed right-4 bottom-4" on:click={() => create = true}><Plus/> Ajouter un matériel</button>
+    <button class="btn fixed right-4 bottom-4"><Plus/> Ajouter un matériel</button>
 </section>
