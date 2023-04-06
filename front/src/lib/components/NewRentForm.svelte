@@ -4,6 +4,7 @@
 
     export let equipement: Equipment;
     export let editMode: boolean;
+    export let onNewRentHistory: () => void;
 
     let startDate: string = isDev() ? new Date().toISOString().split("T")[0] : "";
     let stopDate: string = isDev() ? new Date().toISOString().split("T")[0] : "";
@@ -66,6 +67,7 @@
         }
 
         editMode = false;
+        onNewRentHistory();
     };
 </script>
 

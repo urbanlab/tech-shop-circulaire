@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { currentEquipments, currentUser, type Equipment } from "$lib/store";
+    import { currentEquipments, type Equipment } from "$lib/store";
     import { resolveUrlToImage } from "$lib/utils/pocket-base";
     import Title from "./misc/Title.svelte";
     import Pencil from "svelte-material-icons/Pencil.svelte";
@@ -43,6 +43,10 @@
         []
     );
     $: console.log({ rentHistoriesMonths }); // FIXME : remove this after dev
+
+    const onNewRentHistory = () => {
+        editMode = false;
+    };
 </script>
 
 <section>
@@ -119,7 +123,7 @@
             <input type="checkbox" id="my-modal" class="modal-toggle" />
             <div class="modal">
                 <div class="modal-box">
-                    <NewRentForm equipement={equipment} bind:editMode />
+                    <NewRentForm equipement={equipment} bind:editMode onNewRentHistory={onNewRentHistory} />
                 </div>
             </div>
         {/if}
