@@ -35,7 +35,7 @@
       <div class="container flex">
         <div class="flex flex-row flex-wrap">
           {#each $currentEquipments as currentEquipment}
-          <a href="/equipments/{currentEquipment.id}">
+          <a href="/equipment/{currentEquipment.id}">
             <div class="cursor-pointer w-64 h-80 mr-4 mb-4 hover:opacity-80 rounded-2xl border overflow-hidden border-slate-200  bg-cover bg-center bg-no-repeat" style="background-image: url({mediaUrl + currentEquipment.collectionId + "/" + currentEquipment.id + "/" +  currentEquipment.image});">
               <div class="h-52 flex justify-end items-end">
                 <span class="m-4 bg-white pl-3 pr-4 rounded-3xl">Type</span>

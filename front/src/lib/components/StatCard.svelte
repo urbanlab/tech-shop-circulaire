@@ -7,6 +7,7 @@
     export let title: string;
     export let icon: "handshake" | "cash" | "co2";
     export let value: string;
+    export let bg: string;
     export let color: string;
 
     let iconSize: number = 30;
@@ -15,13 +16,13 @@
 <section>
     <div class=" bg-white rounded-3xl mt-4 mb-4">
         <div class="flex p-4">
-          <div class="rounded-lg {color} w-11 flex justify-center items-center mr-4">
+          <div class="rounded-lg {bg} w-11 flex justify-center items-center mr-4">
             {#if icon === "handshake"}
-              <HandShake size={iconSize} />
+              <HandShake size={iconSize} color={color}/>
             {:else if icon === "cash"}
               <Cash  size={iconSize} />
             {:else if icon === "co2"}
-                <MoleculeCo2 size={iconSize} />
+                <MoleculeCo2 size={iconSize} color={color} />
             {/if}
           </div>
           <div class="flex flex-col">
