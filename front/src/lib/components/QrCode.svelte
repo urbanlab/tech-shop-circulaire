@@ -9,7 +9,7 @@
       onMount(() => {
   
         let script = document.createElement('script');
-        script.src = "https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
         document.head.append(script);
       
           script.onload = function() {

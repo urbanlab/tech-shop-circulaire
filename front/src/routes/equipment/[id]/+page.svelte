@@ -11,8 +11,8 @@
 
   import { page } from '$app/stores';
   import { currentUser, currentEquipments, type Equipment } from '$lib/store';
-    import FullButton from "$lib/components/buttons/FullButton.svelte";
-    import BorderButton from "$lib/components/buttons/BorderButton.svelte";
+  import FullButton from "$lib/components/buttons/FullButton.svelte";
+  import BorderButton from "$lib/components/buttons/BorderButton.svelte";
 
 
   const mediaUrl = PUBLIC_POCKETBASE_URL + "/api/files/";
@@ -21,6 +21,34 @@
   let canEdit = false;
 
   $: equipment = $currentEquipments.find((equipment: Equipment) => equipment.id === id); // WARN : equipment can be undefined, handle this
+
+
+
+  $: rentHistoriesWithMonth = equipment?.expand?.rentHistories?.map((rentHistory) => {
+        const month: string = new Date(rentHistory.startDate).toLocaleString("default", {
+            month: "long"
+        });
+        const year: number = new Date(rentHistory.startDate).getFullYear();
+        const monthYear = `${month} ${year}`;
+        return { ...rentHistory, monthYear };
+    }).sort((a, b) => {
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+        return dateB.getTime() - dateA.getTime();
+    });
+    $: console.log({ rentHistoriesWithMonth }); // FIXME : remove this after dev
+
+    $: rentHistoriesMonths = rentHistoriesWithMonth?.reduce(
+        (acc: string[], rentHistory) => {
+            if (!acc.includes(rentHistory.monthYear)) {
+                acc.push(rentHistory.monthYear);
+            }
+            return acc;
+        },
+        []
+    );
+    $: console.log({ rentHistoriesMonths }); // FIXME : remove this after dev
+
 
 
   let stats = [
@@ -116,7 +144,7 @@
           </div>
           <div>
             <p>Typologie de matériel</p>
-            <input type="text" value={equipment.type} class="input input-bordered w-full max-w-xs" disabled/>
+            <input type="text" value={equipment?.expand?.type?.name} class="input input-bordered w-full max-w-xs" disabled/>
           </div>
           <div>
             <p>Date d'achat</p>
@@ -138,8 +166,8 @@
             <MoleculeCo2/>
           </div>
           <div>
-            <p>Impact co2 à l'achat éstimé</p>
-            <p>~400 400Kg</p>
+            <p>Impact co2 à l'achat estimé</p>
+            <p>~{equipment?.expand?.type?.co2Weight} Kg</p>
           </div>
         </div>
       </div>
@@ -191,18 +219,28 @@
 
       <!-- Suivi-->
       <div>
-        {#each history as item }
-          <div>
-            <p>{item.month}  {item.year}</p>
-            <p>Du {item.start} au {item.end} {item.year} - {item.user}</p>
-          </div>
-        {/each}
+        <Title title={"Suivi de l'appareil"} />
+        {#if equipment?.expand?.rentHistories && rentHistoriesWithMonth && rentHistoriesMonths}
+            <!-- Group by month -->
+            {#each rentHistoriesMonths as rentHistoriesMonth}
+                <h2 class="font-bold">{rentHistoriesMonth}</h2>
+                {#each rentHistoriesWithMonth as rentHistory}
+                    {#if rentHistory.monthYear === rentHistoriesMonth}
+                        <div>
+                            <p>Du {rentHistory.startDate} au {rentHistory.stopDate} - {rentHistory.borrowerStructure}</p>
+                        </div>
+                    {/if}
+                {/each}
+            {/each}
+        {:else}
+            <p>Aucun historique de location</p>
+        {/if}
       </div>
 
       <!--Actions-->
-      <div>
-        <button>Modifier</button>
-        <button>Supprimer</button>
+      <div class="flex mt-8">
+        <BorderButton text="Editer la fiche matériel" />
+        <FullButton text="Supprimer le matériel" />
       </div>
 
   {/if}
