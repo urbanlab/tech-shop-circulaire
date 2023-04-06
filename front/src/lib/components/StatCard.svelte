@@ -5,7 +5,7 @@
     import MoleculeCo2 from "svelte-material-icons/MoleculeCo2.svelte";
 
     export let title: string;
-    export let icon: string;
+    export let icon: "handshake" | "cash" | "co2";
     export let value: string;
     export let color: string;
 
