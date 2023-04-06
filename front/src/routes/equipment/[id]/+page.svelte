@@ -121,17 +121,17 @@
   <!-- Equipement -->
   {#if equipment}
     <Title title="Identité de l'appareil" />
-    <div class="flex w-full mt-4">
+    <div class="flex lg:flex-row flex-col w-full mt-4 justify-center ">
       
-      <div class="1/2">
-        <div class="w-96 h-96 bg-contain bg-center bg-no-repeat rounded-2xl flex justify-start items-end text-white font-bold" style="background-image: url({mediaUrl + equipment.collectionId + "/" + equipment.id + "/" +  equipment.image});">
+      <div class="lg:1/2">
+        <div class=" w-96 h-96 bg-contain bg-center bg-no-repeat rounded-2xl flex justify-start items-end text-white font-bold" style="background-image: url({mediaUrl + equipment.collectionId + "/" + equipment.id + "/" +  equipment.image});">
           <div class="p-4">
             <p>{equipment.name}</p>
             <p>{$currentUser.structure}</p>
           </div>  
         </div>
       </div>
-      <div class="flex 1/2 flex-col w-full pl-8">
+      <div class="flex  lg:1/2 flex-col w-full pl-8">
         <div>
           <p>Nom de l'appareil</p>
           <input type="text" value={equipment.name} class="input input-bordered w-full max-w-xs" disabled/>

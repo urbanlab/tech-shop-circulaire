@@ -14,10 +14,10 @@
 <html lang="fr" class="">
   <body data-theme="customTheme" class="bg-[#cbe4de80] flex min-h-screen w-screen">
     {#if $currentUser}
-    <div class="w-3/12  mr-4">
+    <div class="lg:w-3/12  mr-4 hidden lg:block">
       <Nav/>
     </div>
-    <div class="bg-white h-full rounded-t-2xl p-8 pt-10 mt-10 w-9/12">
+    <div class="bg-white h-full rounded-t-2xl p-8 pt-10 mt-10 lg:w-9/12">
       <slot />
     </div>
     {:else}
