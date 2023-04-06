@@ -4,94 +4,100 @@
   import ChevronLeft from "svelte-material-icons/ChevronLeft.svelte";
   import MoleculeCo2 from "svelte-material-icons/MoleculeCo2.svelte";
 
-  import Title from "../../../lib/components/misc/Title.svelte";
   import { PUBLIC_FRONT_DOMAIN_URL } from "$env/static/public";
-  import {PUBLIC_POCKETBASE_URL} from '$env/static/public'
+  import { PUBLIC_POCKETBASE_URL } from "$env/static/public";
 
-
-  import { page } from '$app/stores';
-  import { currentUser, currentEquipments, type Equipment } from '$lib/store';
+  import { currentUser, currentEquipments, type Equipment } from "$lib/store";
   import FullButton from "$lib/components/buttons/FullButton.svelte";
   import BorderButton from "$lib/components/buttons/BorderButton.svelte";
 
-
   const mediaUrl = PUBLIC_POCKETBASE_URL + "/api/files/";
+  import { page } from "$app/stores";
+
+  import NewRentForm from "$lib/components/NewRentForm.svelte";
+  import Title from "$lib/components/misc/Title.svelte";
+
   const id = $page.params.id;
 
-  let canEdit = false;
+  $: editMode = false;
 
   $: equipment = $currentEquipments.find((equipment: Equipment) => equipment.id === id); // WARN : equipment can be undefined, handle this
+  $: console.log({ equipment }); // FIXME : remove this after dev
 
+  $: rentHistoriesWithMonth = equipment?.expand?.rentHistories
+      ?.map((rentHistory) => {
+          const month: string = new Date(rentHistory.startDate).toLocaleString(
+              "default",
+              {
+                  month: "long"
+              }
+          );
+          const year: number = new Date(rentHistory.startDate).getFullYear();
+          const monthYear = `${month} ${year}`;
+          return { ...rentHistory, monthYear };
+      })
+      .sort((a, b) => {
+          const dateA = new Date(a.startDate);
+          const dateB = new Date(b.startDate);
+          return dateB.getTime() - dateA.getTime();
+      });
+  $: console.log({ rentHistoriesWithMonth }); // FIXME : remove this after dev
 
+  $: rentHistoriesMonths = rentHistoriesWithMonth?.reduce(
+      (acc: string[], rentHistory) => {
+          if (!acc.includes(rentHistory.monthYear)) {
+              acc.push(rentHistory.monthYear);
+          }
+          return acc;
+      },
+      []
+  );
+  $: console.log({ rentHistoriesMonths }); // FIXME : remove this after dev
 
-  $: rentHistoriesWithMonth = equipment?.expand?.rentHistories?.map((rentHistory) => {
-        const month: string = new Date(rentHistory.startDate).toLocaleString("default", {
-            month: "long"
-        });
-        const year: number = new Date(rentHistory.startDate).getFullYear();
-        const monthYear = `${month} ${year}`;
-        return { ...rentHistory, monthYear };
-    }).sort((a, b) => {
-        const dateA = new Date(a.startDate);
-        const dateB = new Date(b.startDate);
-        return dateB.getTime() - dateA.getTime();
-    });
-    $: console.log({ rentHistoriesWithMonth }); // FIXME : remove this after dev
-
-    $: rentHistoriesMonths = rentHistoriesWithMonth?.reduce(
-        (acc: string[], rentHistory) => {
-            if (!acc.includes(rentHistory.monthYear)) {
-                acc.push(rentHistory.monthYear);
-            }
-            return acc;
-        },
-        []
-    );
-    $: console.log({ rentHistoriesMonths }); // FIXME : remove this after dev
-
-
+  const onNewRentHistory = () => {
+      editMode = false;
+  };
 
   let stats = [
-    {
-      title: "Nombres d'échanges",
-      icon: "handshake",
-      value: "16",
-      color: "theme-bg-green",
-      bg: "theme-bg-light-green",
-    },
-    {
-      title: "Economie réalisée",
-      icon: "cash",
-      value: "~9455€",
-      color: "theme-bg-violet",
-      bg: "bg-lime-500",
-    },
-    {
-      title: "Economie de CO2",
-      icon: "co2",
-      value: "~2377Kg",
-      color: "theme-bg-blue",
-      bg: "bg-lime-900",
-    },
+      {
+          title: "Nombres d'échanges",
+          icon: "handshake",
+          value: "16",
+          color: "theme-bg-green",
+          bg: "theme-bg-light-green"
+      },
+      {
+          title: "Economie réalisée",
+          icon: "cash",
+          value: "~9455€",
+          color: "theme-bg-violet",
+          bg: "bg-lime-500"
+      },
+      {
+          title: "Economie de CO2",
+          icon: "co2",
+          value: "~2377Kg",
+          color: "theme-bg-blue",
+          bg: "bg-lime-900"
+      }
   ];
 
   let history = [
-    {
-      "month": "Mars",
-      "year": "2023",
-      "start": "17 mars",
-      "end": "17 avril",
-      "user": "Studio 24"
-    },
-    {
-      "month": "Mars",
-      "year": "2023",
-      "start": "5 juin",
-      "end": "17 avril",
-      "user": "WSK"
-    }
-  ]
-
+      {
+          month: "Mars",
+          year: "2023",
+          start: "17 mars",
+          end: "17 avril",
+          user: "Studio 24"
+      },
+      {
+          month: "Mars",
+          year: "2023",
+          start: "5 juin",
+          end: "17 avril",
+          user: "WSK"
+      }
+  ];
 </script>
 
 <section class="flex flex-col">
@@ -103,7 +109,7 @@
     <div class="w-2 h-2 rounded-full theme-bg-green">   </div>
     <p class="ml-4">Disponible</p>
   </div>
- 
+
   <!-- Statistiques -->
   <div class="flex flex-col theme-bg-light-blue  rounded-3xl p-4">
     <p class="font-bold">Bilan produit</p>
@@ -122,13 +128,13 @@
   {#if equipment}
     <Title title="Identité de l'appareil" />
     <div class="flex lg:flex-row flex-col w-full mt-4 justify-center ">
-      
+
       <div class="lg:1/2">
         <div class=" w-96 h-96 bg-contain bg-center bg-no-repeat rounded-2xl flex justify-start items-end text-white font-bold" style="background-image: url({mediaUrl + equipment.collectionId + "/" + equipment.id + "/" +  equipment.image});">
           <div class="p-4">
             <p>{equipment.name}</p>
             <p>{$currentUser.structure}</p>
-          </div>  
+          </div>
         </div>
       </div>
       <div class="flex  lg:1/2 flex-col w-full pl-8">
@@ -157,10 +163,10 @@
           <div>
         </div>
         </div>
-         
-         
+
+
         <!-- Co2 info -->
-        
+
         <div class="bg-blue-400 rounded-3xl flex items-center p-4 mt-4">
           <div class="bg-white rounded-xl w-12 h-12 flex justify-center items-center mr-4">
             <MoleculeCo2/>
@@ -171,7 +177,7 @@
           </div>
         </div>
       </div>
-      
+
 
     </div>
     <!-- QR Code -->
@@ -200,7 +206,7 @@
             <p>{$currentUser.structure}</p>
           </div>
         </div>-->
-        <QrCode codeValue={PUBLIC_FRONT_DOMAIN_URL + "/equipment/" + equipment.id} squareSize=100 />
+        <QrCode codeValue={PUBLIC_FRONT_DOMAIN_URL + "/equipment/" + equipment.id} squareSize={100} />
       </div>
     </div>
 
@@ -239,9 +245,21 @@
 
       <!--Actions-->
       <div class="flex mt-8">
-        <BorderButton text="Editer la fiche matériel" />
+        <span on:click={() => editMode = !editMode}><BorderButton text="Editer la fiche matériel" /></span>
         <FullButton text="Supprimer le matériel" />
-      </div>
 
+        {#if editMode}
+            <!-- Open modal button -->
+            <label for="my-modal" class="rounded-3xl  theme-bg-violet cursor-pointer pl-4 pr-4 pt-2 pb-2">Prêter l’appareil</label>
+
+            <!-- Modal -->
+            <input type="checkbox" id="my-modal" class="modal-toggle" />
+            <div class="modal">
+                <div class="modal-box">
+                    <NewRentForm equipement={equipment} bind:editMode onNewRentHistory={onNewRentHistory} />
+                </div>
+            </div>
+        {/if}
+      </div>
   {/if}
 </section>
