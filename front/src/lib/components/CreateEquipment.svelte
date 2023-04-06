@@ -4,6 +4,10 @@
     import { currentEquipmentTypes, pb } from "$lib/store";
     import isDev from "$lib/utils/isDev";
 
+    // Form utils =================================
+
+    let errorMessage: string;
+
     // Form datas =================================
 
     let name: string = isDev() ? `Name ${Math.random() * 100}` : "";
@@ -33,6 +37,23 @@
             desc,
             tips
         };
+        // check if all fields are filled
+        if (
+            !equipment.name ||
+            !equipment.reference ||
+            !equipment.type ||
+            !equipment.date ||
+            !equipment.purchaseCost ||
+            !equipment.desc ||
+            !equipment.tips ||
+            !image
+        ) {
+            errorMessage = "All fields are required";
+            return;
+        }
+
+        console.log("Creating equipment: ", equipment);
+
 
         let newEquipmentId: string;
         try {
@@ -67,6 +88,7 @@
         value: type.id,
         label: type.name
     }));
+    $: firstEquipmentType = $currentEquipmentTypes[0];
 
     // Image preview ==============================
 
@@ -162,4 +184,7 @@
 
     <!-- Submit button -->
     <button class="btn" on:click={createEquipment}>Create</button>
+    {#if errorMessage}
+        <p class="text-red-500">{errorMessage}</p>
+    {/if}
 </section>
