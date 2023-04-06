@@ -51,13 +51,15 @@
             </div>
           </a>
           {/each}
-          <div class="flex border border-dashed hover:bg-slate-200  hover:border-white cursor-pointer  w-64 h-80 rounded-2xl justify-center items-center">
-            <Plus/>
-            <p>Ajouter un matériel</p>
-          </div>
+          <a href="/equipment/create">
+            <div class="flex border border-dashed hover:bg-slate-200  hover:border-white cursor-pointer  w-64 h-80 rounded-2xl justify-center items-center">
+              <Plus/>
+              <p>Ajouter un matériel</p>
+            </div>
+          </a>
         </div>
         </div>
       </div>
-      
-    <button class="btn fixed right-4 bottom-4" on:click={() => create = true}><Plus/> Ajouter un matériel</button>
+
+    <a class="btn fixed right-4 bottom-4" href="/equipment/create"><Plus/> Ajouter un matériel</a>
 </section>
