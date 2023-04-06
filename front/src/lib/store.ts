@@ -36,12 +36,13 @@ export type Equipment = {
     image: string;
     purchaseCost: number;
     type: string;
-    rentHistories: any[];
+    rentHistories: string[];
     /**
      * Expended field
      */
-    expand: {
-        type: EquipmentTypes;
+    expand?: {
+        type?: EquipmentTypes;
+        rentHistories?: RentHistory[];
     };
 };
 
@@ -50,7 +51,7 @@ export const currentEquipments = writable<Equipment[]>([]);
 export async function watchEquipmentsChange() {
     const getEquipments = await pb
         .collection("equipments")
-        .getFullList<Equipment>({ expand: "type" });
+        .getFullList<Equipment>({ expand: "type,rentHistories" });
     currentEquipments.set(getEquipments);
     // subscribe to the user data
     pb.collection("equipments").subscribe("*", async ({ action, record }) => {
@@ -112,3 +113,13 @@ export async function watchEquipmentTypesChange() {
         }
     });
 }
+
+export type RentHistory = {
+    id: string;
+    startDate: string;
+    stopDate: string;
+    borrowerMail: string;
+    borrowerStructure: string;
+};
+
+export const currentRentHistories = writable<RentHistory[]>([]);

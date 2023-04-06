@@ -1,6 +1,12 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { currentEquipments, type Equipment } from "$lib/store";
+    import {
+        currentEquipments,
+        currentRentHistories,
+        pb,
+        type Equipment,
+        type RentHistory
+    } from "$lib/store";
     import { resolveUrlToImage } from "$lib/utils/pocket-base";
     import Title from "./misc/Title.svelte";
     import Pencil from "svelte-material-icons/Pencil.svelte";
@@ -38,7 +44,7 @@
         <p><strong>Name</strong>: {equipment.name}</p>
         <p><strong>Reference</strong>: {equipment.reference}</p>
 
-        {#if equipment.expand}
+        {#if equipment?.expand?.type}
             <!-- WARN : equipment.expand doesn't exist if the page is load after creation, page must be reload  -->
             <p><strong>Type</strong>: {equipment.expand.type.name}</p>
         {/if}
@@ -49,6 +55,24 @@
         <p><strong>Description</strong>: {equipment.desc}</p>
 
         <p><strong>Tips</strong>: {equipment.tips}</p>
+
+        <hr />
+
+        <Title title={"Historique de location"} />
+        {#if equipment?.expand?.rentHistories}
+            {#each equipment.expand.rentHistories as rentHistory}
+                <div class="border-2">
+                    <p><strong>Start date</strong>: {rentHistory.startDate}</p>
+                    <p><strong>End date</strong>: {rentHistory.stopDate}</p>
+                    <p><strong>Borrower email</strong>: {rentHistory.borrowerMail}</p>
+                    <p>
+                        <strong>Borrower structure</strong>: {rentHistory.borrowerStructure}
+                    </p>
+                </div>
+            {/each}
+        {:else}
+            <p>Aucun historique de location</p>
+        {/if}
     {:else}
         <h1>Equipment not found</h1>
     {/if}
