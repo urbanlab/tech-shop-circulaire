@@ -55,22 +55,26 @@ export async function watchEquipmentsChange() {
     currentEquipments.set(getEquipments);
     // subscribe to the user data
     pb.collection("equipments").subscribe("*", async ({ action, record }) => {
+        const newRecord = await pb.collection("equipments").getOne(record.id, {
+            expand: "type,rentHistories",
+        });
+
         if (action === "update") {
             currentEquipments.set(
                 get(currentEquipments).map((equipment) => {
-                    if (equipment.id === record.id) {
-                        return record;
+                    if (equipment.id === newRecord.id) {
+                        return newRecord;
                     }
                     return equipment;
                 })
             );
         }
         if (action === "create") {
-            currentEquipments.set([...get(currentEquipments), record]);
+            currentEquipments.set([...get(currentEquipments), newRecord]);
         }
         if (action === "delete") {
             currentEquipments.set(
-                get(currentEquipments).filter((equipment) => equipment.id !== record.id)
+                get(currentEquipments).filter((equipment) => equipment.id !== newRecord.id)
             );
         }
     });
@@ -120,6 +124,7 @@ export type RentHistory = {
     stopDate: string;
     borrowerMail: string;
     borrowerStructure: string;
+    borrowerName: string;
 };
 
 export const currentRentHistories = writable<RentHistory[]>([]);
