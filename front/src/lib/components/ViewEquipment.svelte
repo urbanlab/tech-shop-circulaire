@@ -1,31 +1,36 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { currentEquipments, type Equipment } from "$lib/store";
+    import { currentEquipments, currentUser, type Equipment } from "$lib/store";
     import { resolveUrlToImage } from "$lib/utils/pocket-base";
     import Title from "./misc/Title.svelte";
     import Pencil from "svelte-material-icons/Pencil.svelte";
     import PencilOff from "svelte-material-icons/PencilOff.svelte";
+    import NewRentForm from "./NewRentForm.svelte";
 
     const id = $page.params.id;
-    console.log(id);
 
     $: editMode = false;
 
     $: equipment = $currentEquipments.find((equipment: Equipment) => equipment.id === id); // WARN : equipment can be undefined, handle this
     $: console.log({ equipment }); // FIXME : remove this after dev
 
-    $: rentHistoriesWithMonth = equipment?.expand?.rentHistories?.map((rentHistory) => {
-        const month: string = new Date(rentHistory.startDate).toLocaleString("default", {
-            month: "long"
+    $: rentHistoriesWithMonth = equipment?.expand?.rentHistories
+        ?.map((rentHistory) => {
+            const month: string = new Date(rentHistory.startDate).toLocaleString(
+                "default",
+                {
+                    month: "long"
+                }
+            );
+            const year: number = new Date(rentHistory.startDate).getFullYear();
+            const monthYear = `${month} ${year}`;
+            return { ...rentHistory, monthYear };
+        })
+        .sort((a, b) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+            return dateB.getTime() - dateA.getTime();
         });
-        const year: number = new Date(rentHistory.startDate).getFullYear();
-        const monthYear = `${month} ${year}`;
-        return { ...rentHistory, monthYear };
-    }).sort((a, b) => {
-        const dateA = new Date(a.startDate);
-        const dateB = new Date(b.startDate);
-        return dateB.getTime() - dateA.getTime();
-    });
     $: console.log({ rentHistoriesWithMonth }); // FIXME : remove this after dev
 
     $: rentHistoriesMonths = rentHistoriesWithMonth?.reduce(
@@ -89,6 +94,9 @@
                             <p><strong>Start date</strong>: {rentHistory.startDate}</p>
                             <p><strong>End date</strong>: {rentHistory.stopDate}</p>
                             <p>
+                                <strong>Borrower name</strong>: {rentHistory.borrowerName}
+                            </p>
+                            <p>
                                 <strong>Borrower email</strong>: {rentHistory.borrowerMail}
                             </p>
                             <p>
@@ -101,6 +109,19 @@
             {/each}
         {:else}
             <p>Aucun historique de location</p>
+        {/if}
+
+        {#if editMode}
+            <!-- Open modal button -->
+            <label for="my-modal" class="btn">Prêter l’appareil</label>
+
+            <!-- Modal -->
+            <input type="checkbox" id="my-modal" class="modal-toggle" />
+            <div class="modal">
+                <div class="modal-box">
+                    <NewRentForm equipement={equipment} bind:editMode />
+                </div>
+            </div>
         {/if}
     {:else}
         <h1>Equipment not found</h1>

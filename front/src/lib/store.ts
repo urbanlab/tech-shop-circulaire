@@ -120,6 +120,7 @@ export type RentHistory = {
     stopDate: string;
     borrowerMail: string;
     borrowerStructure: string;
+    borrowerName: string;
 };
 
 export const currentRentHistories = writable<RentHistory[]>([]);
